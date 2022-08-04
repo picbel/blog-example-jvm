@@ -1,7 +1,10 @@
 package com.blog.be.example.concurrency.lock
 
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
-class SynchronizedAndReentrantLock {
+
+class SynchronizedExample {
     @Synchronized
     fun syncMethod() = run { }
 
@@ -15,4 +18,27 @@ class SynchronizedAndReentrantLock {
     private fun doSomething() {}
 
     private fun doSomething2() {}
+
+}
+
+class ReentrantLockExample{
+    private val lock: ReentrantLock = ReentrantLock(true)
+
+    fun foo(){
+        try {
+            lock.lock()
+            doSomething()
+        }finally {
+            lock.unlock()
+        }
+
+    }
+    private fun doSomething() {}
+
+    fun foo2(){
+        lock.withLock {
+
+        }
+    }
+
 }
