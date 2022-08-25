@@ -10,6 +10,7 @@ import java.util.concurrent.Executors
 data class ServiceKey(
     private val key: String
 )
+
 class ServiceManager(
     private val serviceMap: ConcurrentHashMap<ServiceKey, String>
 ) {
@@ -36,7 +37,7 @@ class ServiceManagerTest {
 
         // 1번 실행
         service.execute {
-            sut.execute("1",1)
+            sut.execute("1", 1)
         }
 
 
@@ -60,14 +61,14 @@ class ServiceManagerTest {
 
         // 실행
         service.execute {
-            sut.execute("1",1)
+            sut.execute("1", 1)
         }
         Thread.sleep(100)
 
         for (i in 0 until numberOfThreads) {
-            if (i == 5){
-                service.execute{
-                    sut.execute("1",i)
+            if (i == 5) {
+                service.execute {
+                    sut.execute("1", i)
                 }
             }
             service.execute() {
