@@ -3,6 +3,7 @@ package cote.solution
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 
+// 좋아요 싫어요 비율이 1 : 3인 이유가 있다...
 class StringToIntegerAtoi {
 
     private val numberPool = ('0'..'9')
@@ -13,33 +14,29 @@ class StringToIntegerAtoi {
 
     fun myAtoi(s: String): Int {
         val n = StringBuffer()
-        (s.replace(" ", "").takeIf { it.isNotBlank() }?.trim().takeIf { intPool.contains(it?.first()) }
+        (s.takeIf { it.isNotBlank() }?.trim().takeIf { intPool.contains(it?.first()) }
             ?: return 0).let {
             var pmFlag = false
-            var afterStr = false
             run {
-                it.forEachIndexed { index, num ->
-                    if (num == '.') {
+                it.forEach { c ->
+                    if (c == '.') {
                         return@run
                     }
-                    if (pm.contains(num)) {
-                        if (pmFlag) {
-                            return 0
+                    if (pm.contains(c)) {
+                        if (pmFlag || numberPool.contains(n.lastOrNull())) {
+                            return@run
                         }
                         pmFlag = true
-                        n.append(num)
-                        return@forEachIndexed
+                        n.append(c)
+                        return@forEach
                     }
-                    if (numberPool.contains(num)) {
-                        if (afterStr) {
-                            return  0
-                        }
-                        n.append(num)
+
+                    if (numberPool.contains(c)) {
+                        n.append(c)
                     } else {
-                        if (afterStr && numberPool.contains(it[index - 1])) {
-                            return 0
+                        if (pmFlag || numberPool.contains(n.lastOrNull())) {
+                            return@run
                         }
-                        afterStr = true
                     }
                 }
             }
@@ -73,6 +70,9 @@ class StringToIntegerAtoi {
             { assert(myAtoi("+") == 0) },
             { assert(myAtoi("00000-42a1234") == 0) },
             { assert(myAtoi("  -0012a42") == -12) },
+            { assert(myAtoi("   +0 123") == 0) },
+            { assert(myAtoi("-5-") == -5) },
+            { assert(myAtoi("  +  413") == 0) },
         )
     }
 
