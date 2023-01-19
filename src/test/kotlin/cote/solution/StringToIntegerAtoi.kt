@@ -13,20 +13,33 @@ class StringToIntegerAtoi {
 
     fun myAtoi(s: String): Int {
         val n = StringBuffer()
-        (s.takeIf { it.isNotBlank() }?.trim().takeIf { intPool.contains(it?.first()) } ?: return 0).let {
-            var pmFlag  = false
-            run{
-                it.forEach { num ->
+        (s.replace(" ", "").takeIf { it.isNotBlank() }?.trim().takeIf { intPool.contains(it?.first()) }
+            ?: return 0).let {
+            var pmFlag = false
+            var afterStr = false
+            run {
+                it.forEachIndexed { index, num ->
                     if (num == '.') {
                         return@run
                     }
                     if (pm.contains(num)) {
-                        if (pmFlag) { return  0 }
+                        if (pmFlag) {
+                            return 0
+                        }
                         pmFlag = true
                         n.append(num)
+                        return@forEachIndexed
                     }
                     if (numberPool.contains(num)) {
+                        if (afterStr) {
+                            return  0
+                        }
                         n.append(num)
+                    } else {
+                        if (afterStr && numberPool.contains(it[index - 1])) {
+                            return 0
+                        }
+                        afterStr = true
                     }
                 }
             }
@@ -52,7 +65,6 @@ class StringToIntegerAtoi {
             { assert(myAtoi("42") == 42) },
             { assert(myAtoi("   -42") == -42) },
             { assert(myAtoi("4193 with words") == 4193) },
-//            { assert(myAtoi("-4444") == -4444) },
             { assert(myAtoi("words and 987") == 0) },
             { assert(myAtoi("0032") == 32) },
             { assert(myAtoi("3.14159") == 3) },
@@ -60,6 +72,7 @@ class StringToIntegerAtoi {
             { assert(myAtoi("+-12") == 0) },
             { assert(myAtoi("+") == 0) },
             { assert(myAtoi("00000-42a1234") == 0) },
+            { assert(myAtoi("  -0012a42") == -12) },
         )
     }
 
