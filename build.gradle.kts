@@ -9,7 +9,6 @@ plugins {
 }
 
 group = "com.example"
-version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -43,6 +42,8 @@ dependencies {
     testImplementation("org.testcontainers:mongodb")
     testImplementation("org.testcontainers:r2dbc")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
+
 }
 
 dependencyManagement {
